@@ -16,11 +16,19 @@ spec:
     - name: test-connectivity
       image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
       command:
+<<<<<<< HEAD
         - /bin/bash
         - -c
         - |
           echo "Testing Rspamd milter connectivity on port 11332..."
           if timeout 2 bash -c "echo > /dev/tcp/{{ include "rspamd.fullname" . }}/11332" >/dev/null 2>&1; then
+=======
+        - /bin/sh
+        - -c
+        - |
+          echo "Testing Rspamd milter connectivity on port 11332..."
+          if nc -z -w 2 {{ include "rspamd.fullname" . }} 11332; then
+>>>>>>> 103fb91 (feat: Add Redis and Rspamd Helm charts with templates and configurations)
             echo "✓ Milter port 11332 is reachable"
           else
             echo "✗ Milter port 11332 is NOT reachable"
@@ -29,7 +37,11 @@ spec:
 
           {{- if .Values.service.webui.enabled }}
           echo "Testing Rspamd Web UI connectivity on port 11334..."
+<<<<<<< HEAD
           if timeout 2 bash -c "echo > /dev/tcp/{{ include "rspamd.fullname" . }}/11334" >/dev/null 2>&1; then
+=======
+          if nc -z -w 2 {{ include "rspamd.fullname" . }} 11334; then
+>>>>>>> 103fb91 (feat: Add Redis and Rspamd Helm charts with templates and configurations)
             echo "✓ Web UI port 11334 is reachable"
           else
             echo "✗ Web UI port 11334 is NOT reachable"
