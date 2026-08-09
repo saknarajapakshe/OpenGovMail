@@ -41,7 +41,7 @@ spec:
               {{- end }}
           env:
             - name: MYHOSTNAME
-              value: {{ include "silver.mailHostname" . | quote }}
+              value: {{ include "opengovmail.mailHostname" . | quote }}
             - name: LOG_TO_STDOUT
               value: "1"
           volumeMounts:
@@ -51,7 +51,10 @@ spec:
             - name: postfix-master
               mountPath: /etc/postfix/master.cf
               subPath: master.cf
-            - name: postfix-silver
+            - name: postfix-opengovmail
+              # NOTE: filename must stay "silver.yaml" until the postfix image is
+              # rebuilt — the current ghcr.io/lsflk/silver-smtp image's entrypoint
+              # script has this exact path hardcoded.
               mountPath: /etc/postfix/silver.yaml
               subPath: silver.yaml
             {{- if .Values.global.tls.enabled }}
@@ -93,7 +96,7 @@ spec:
             items:
               - key: master.cf
                 path: master.cf
-        - name: postfix-silver
+        - name: postfix-opengovmail
           configMap:
             name: {{ include "postfix.fullname" . }}
             items:
@@ -102,5 +105,5 @@ spec:
         {{- if .Values.global.tls.enabled }}
         - name: tls
           secret:
-            secretName: {{ include "silver.tlsSecretName" . }}
+            secretName: {{ include "opengovmail.tlsSecretName" . }}
         {{- end }}

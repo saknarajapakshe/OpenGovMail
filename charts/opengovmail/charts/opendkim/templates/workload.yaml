@@ -36,7 +36,7 @@ spec:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap-opendkim.yaml") . | sha256sum }}
         checksum/tables: {{ include (print $.Template.BasePath "/configmap-tables.yaml") . | sha256sum }}
-        checksum/silver: {{ include (print $.Template.BasePath "/secret-silver.yaml") . | sha256sum }}
+        checksum/opengovmail: {{ include (print $.Template.BasePath "/secret-opengovmail.yaml") . | sha256sum }}
         {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -75,7 +75,10 @@ spec:
             timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
             failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
           volumeMounts:
-            - name: silver-secret
+            - name: opengovmail-secret
+              # NOTE: filename must stay "silver.yaml" until the opendkim image is
+              # rebuilt — the current ghcr.io/lsflk/silver-dkim image's entrypoint
+              # script has this exact path hardcoded.
               mountPath: /etc/opendkim/silver.yaml
               subPath: silver.yaml
               readOnly: true
@@ -100,9 +103,9 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
-        - name: silver-secret
+        - name: opengovmail-secret
           secret:
-            secretName: {{ include "opendkim.fullname" . }}-silver
+            secretName: {{ include "opendkim.fullname" . }}-opengovmail
         - name: config
           configMap:
             name: {{ include "opendkim.fullname" . }}-config
