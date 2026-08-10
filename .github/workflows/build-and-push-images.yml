@@ -8,7 +8,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_PREFIX: lsflk/silver
+  IMAGE_PREFIX: OpenGovMail/opengovmail
 
 jobs:
   detect-changes:

@@ -8,10 +8,7 @@ services:
     volumes:
       - ./opengovmail-config/postfix/main.cf:/etc/postfix/main.cf:ro
       - ./opengovmail-config/postfix/master.cf:/etc/postfix/master.cf:ro
-      # NOTE: container-side filename must stay "silver.yaml" until the postfix
-      # image is rebuilt — the current ghcr.io/lsflk/silver-smtp image's
-      # entrypoint script has this exact path hardcoded.
-      - ../conf/opengovmail.yaml:/etc/postfix/silver.yaml
+      - ../conf/opengovmail.yaml:/etc/postfix/opengovmail.yaml
       - ./opengovmail-config/certbot/keys/etc:/etc/letsencrypt:ro
       - ./opengovmail-config/raven/data:/app/data:rw
       - postfix-spool:/var/spool/postfix
@@ -64,10 +61,7 @@ services:
     image: ghcr.io/lsflk/silver-dkim:main
     container_name: opendkim
     volumes:
-      # NOTE: container-side filename must stay "silver.yaml" until the opendkim
-      # image is rebuilt — the current ghcr.io/lsflk/silver-dkim image's
-      # entrypoint script has this exact path hardcoded.
-      - ../conf/opengovmail.yaml:/etc/opendkim/silver.yaml
+      - ../conf/opengovmail.yaml:/etc/opendkim/opengovmail.yaml
       - ./opengovmail-config/opendkim/opendkim.conf:/etc/opendkim/opendkim.conf:ro
       - ./opengovmail-config/opendkim/KeyTable:/etc/opendkim/KeyTable:ro
       - ./opengovmail-config/opendkim/SigningTable:/etc/opendkim/SigningTable:ro

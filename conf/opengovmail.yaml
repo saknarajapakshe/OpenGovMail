@@ -24,7 +24,7 @@
 #     dkim-selector: default
 #     dkim-key-size: 2048
 
-config-url: "https://github.com/maneesha-xyz/silver-config"
+config-url: "https://github.com/OpenGovMail/config"
 
 domains:
   - domain: 
